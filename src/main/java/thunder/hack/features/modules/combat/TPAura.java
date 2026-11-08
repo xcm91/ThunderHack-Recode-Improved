@@ -14,19 +14,18 @@ import java.util.stream.Collectors;
 
 public class TPAura extends Module {
     private final Setting<Float> range = new Setting<>("Range", 4.5f, 3.0f, 6.0f);
-    private final Setting<Boolean> skipTicks = new Setting<>("Smart Delay", true);
+    private final Setting<Boolean> smartDelay = new Setting<>("Smart Delay", true);
 
     private double oldX, oldY, oldZ;
 
     public TPAura() {
-        super("TPAura", "Teleports to nearby players to attack them", Module.Category.COMBAT);
+        super("TPAura", "Teleports to attack nearby players", Module.Category.COMBAT);
     }
 
     @Override
     public void onEnable() {
         super.onEnable();
         if (mc.player == null || mc.world == null) return;
-
         oldX = mc.player.getX();
         oldY = mc.player.getY();
         oldZ = mc.player.getZ();
@@ -36,11 +35,9 @@ public class TPAura extends Module {
     private void onUpdate(EventUpdate event) {
         if (mc.player == null || mc.world == null || mc.interactionManager == null) return;
 
-        // Find closest valid target
         PlayerEntity target = findClosestTarget();
         if (target == null) return;
 
-        // Save current position
         oldX = mc.player.getX();
         oldY = mc.player.getY();
         oldZ = mc.player.getZ();
@@ -51,12 +48,12 @@ public class TPAura extends Module {
                 target.getX(),
                 target.getY(),
                 target.getZ(),
-                false,  // Изменение вращения головы
+                false,  // Head yaw change
                 mc.player.isOnGround()
             )
         );
 
-        // Attack target
+        // Attack
         mc.interactionManager.attackEntity(mc.player, target);
         mc.player.swingHand(Hand.MAIN_HAND);
 
@@ -66,7 +63,7 @@ public class TPAura extends Module {
                 oldX,
                 oldY,
                 oldZ,
-                false,  // Изменение вращения головы
+                false,  // Head yaw change
                 mc.player.isOnGround()
             )
         );
@@ -75,13 +72,11 @@ public class TPAura extends Module {
     private PlayerEntity findClosestTarget() {
         if (mc.world == null || mc.player == null) return null;
 
-        List<PlayerEntity> players = mc.world.getPlayers().stream()
+        return mc.world.getPlayers().stream()
             .filter(player -> player != mc.player)
             .filter(PlayerEntity::isAlive)
             .filter(player -> mc.player.distanceTo(player) <= range.getValue())
-            .sorted(Comparator.comparingDouble(mc.player::distanceTo))
-            .collect(Collectors.toList());
-
-        return players.isEmpty() ? null : players.get(0);
+            .min(Comparator.comparingDouble(mc.player::distanceTo))
+            .orElse(null);
     }
 }
