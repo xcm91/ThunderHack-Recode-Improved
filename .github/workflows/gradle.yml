@@ -15,14 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      # Removed packages: write as it's not used in this workflow
 
     steps:
-      - name: Use Node.js 20
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -61,3 +55,4 @@ jobs:
           path: |
             ./build/libs/*.jar
           retention-days: 30
+
