@@ -18,7 +18,7 @@ public class TPAura extends Module {
     private int ticks = 0;
 
     public TPAura() {
-        super("TPAura", "Teleports to target, hits, and teleports back", Category.COMBAT);
+        super("TPAura", "Teleports to target, hits, and teleports back", thunder.hack.features.modules.Module.Category.COMBAT);
     }
 
     @Subscribe
@@ -54,4 +54,3 @@ public class TPAura extends Module {
         }
     }
 }
- 
