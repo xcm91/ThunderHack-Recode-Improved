@@ -7,10 +7,9 @@ import thunder.hack.features.modules.Module;
 import thunder.hack.setting.Setting;
 import com.google.common.eventbus.Subscribe;
 import thunder.hack.events.impl.EventUpdate;
+import thunder.hack.EventBus;
 
 import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class TPAura extends Module {
     private final Setting<Float> range = new Setting<>("Range", 4.5f, 3.0f, 6.0f);
@@ -20,6 +19,7 @@ public class TPAura extends Module {
 
     public TPAura() {
         super("TPAura", "Teleports to attack nearby players", Module.Category.COMBAT);
+        EventBus.getInstance().register(this);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class TPAura extends Module {
     }
 
     @Subscribe
-    private void onUpdate(EventUpdate event) {
+    public void onUpdate(EventUpdate event) {
         if (mc.player == null || mc.world == null || mc.interactionManager == null) return;
 
         PlayerEntity target = findClosestTarget();
