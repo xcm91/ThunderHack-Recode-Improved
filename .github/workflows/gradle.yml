@@ -37,11 +37,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Grant Gradlew Permissions
-        run: chmod +x gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew build --stacktrace --info
+      - name: Build with Gradle (using system gradle)
+        run: gradle build --stacktrace --info --console=plain
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
