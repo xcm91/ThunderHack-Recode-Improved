@@ -40,8 +40,8 @@ jobs:
       - name: Grant Gradlew Permissions
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build
+      - name: Build with Gradle (with debug)
+        run: ./gradlew build --stacktrace --info
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -55,4 +55,3 @@ jobs:
           path: |
             ./build/libs/*.jar
           retention-days: 30
-
