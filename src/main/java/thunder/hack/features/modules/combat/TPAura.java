@@ -1,12 +1,11 @@
 package thunder.hack.features.modules.combat;
 
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.Hand;
 import thunder.hack.features.modules.Module;
 import thunder.hack.setting.Setting;
-import thunder.hack.events.Subscribe;
+import com.google.common.eventbus.Subscribe;
 import thunder.hack.events.impl.EventUpdate;
 
 import java.util.Comparator;
@@ -14,7 +13,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TPAura extends Module {
-    private final Setting<Float> range = new Setting<>("Range", 15.0f, 5.0f, 30.0f);
+    private final Setting<Float> range = new Setting<>("Range", 4.5f, 3.0f, 6.0f);
     private final Setting<Boolean> skipTicks = new Setting<>("Smart Delay", true);
 
     private double oldX, oldY, oldZ;
@@ -52,7 +51,7 @@ public class TPAura extends Module {
                 target.getX(),
                 target.getY(),
                 target.getZ(),
-                false,  // Изменение вращения головы (false = не изменять)
+                false,  // Изменение вращения головы
                 mc.player.isOnGround()
             )
         );
@@ -67,7 +66,7 @@ public class TPAura extends Module {
                 oldX,
                 oldY,
                 oldZ,
-                false,  // Изменение вращения головы (false = не изменять)
+                false,  // Изменение вращения головы
                 mc.player.isOnGround()
             )
         );
