@@ -8,7 +8,7 @@ sourceCompatibility = JavaVersion.VERSION_21
 targetCompatibility = JavaVersion.VERSION_21
 
 archivesBaseName = "ThunderHack-Recode"
-version = "1.0.0" // Update this for releases
+version = "1.0.0"
 group = "thunder.hack"
 
 loom {
@@ -21,19 +21,17 @@ repositories {
     maven { url "https://jitpack.io" }
     maven { url "https://maven.fabricmc.net/" }
     maven { url "https://maven.meteordev.org/releases" }
-    maven { url "https://maven.meteordev.org/snapshots" }
 }
 
 configurations {
     libImpl
     modImpl
-    compileOnly.extendsFrom(modCompileOnly)
 }
 
 dependencies {
     // Minecraft & Fabric
     minecraft "com.mojang:minecraft:1.21"
-    mappings loom.officialMojangMappings() // Better than yarn for 1.21
+    mappings loom.officialMojangMappings()
     modImplementation "net.fabricmc:fabric-loader:0.15.3"
     modImplementation "net.fabricmc.fabric-api:fabric-api:0.96.5+1.21"
 
@@ -41,106 +39,37 @@ dependencies {
     libImpl "com.google.guava:guava:32.1.3-jre"
     libImpl "org.jetbrains:annotations:24.0.1"
 
-    // Meteor Orbit (event bus)
+    // Meteor Orbit
     libImpl "meteordevelopment:orbit:5.0.1"
-
-    // Baritone (optional)
-    modCompileOnly "baritone:baritone-fabric:1.21-1.0.0"
-
-    // Netty (for networking)
-    libImpl("io.netty:netty-all:4.1.104.Final") { transitive = false }
 }
 
 processResources {
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft_version
-
     filesMatching("fabric.mod.json") {
         filter { it.replace("%version%", project.version) }
-        filter { it.replace("%mcversion%", project.minecraft_version) }
     }
 }
 
 tasks.withType(JavaCompile).configureEach {
     it.options.release = 21
     it.options.encoding = 'UTF-8'
-    it.options.compilerArgs.addAll(['--parameters'])
 }
 
 java {
     withSourcesJar()
-    modularity.inferModulePath.set(true)
 }
 
 jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
-    from {
-        configurations.libImpl.collect { it.isDirectory() ? it : zipTree(it) }
-    }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-
-    manifest {
-        attributes(
-            'Specification-Title': 'ThunderHack Recode',
-            'Specification-Version': project.version,
-            'Implementation-Title': project.archivesBaseName,
-            'Implementation-Version': project.version,
-            'Built-By': System.getProperty('user.name'),
-            'Built-JDK': System.getProperty('java.version'),
-            'Built-Gradle': gradle.gradleVersion
-        )
-    }
 }
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
             from components.java
-            artifact sourcesJar
-            pom {
-                name = project.archivesBaseName
-                description = 'A Fabric mod for Minecraft 1.21'
-                licenses {
-                    license {
-                        name = 'LGPL-3.0'
-                        url = 'https://www.gnu.org/licenses/lgpl-3.0.html'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'thunder'
-                        name = 'ThunderHack Team'
-                    }
-                }
-                scm {
-                    connection = 'scm:git:https://github.com/ThunderHack/ThunderHack-Recode.git'
-                    developerConnection = 'scm:git:git@github.com:ThunderHack/ThunderHack-Recode.git'
-                    url = 'https://github.com/ThunderHack/ThunderHack-Recode'
-                }
-            }
         }
-    }
-    repositories {
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/ThunderHack/ThunderHack-Recode")
-            credentials {
-                username = System.getenv("GITHUB_ACTOR")
-                password = System.getenv("GITHUB_TOKEN")
-            }
-        }
-    }
-}
-
-// Optimized build task
-tasks.register('optimizedJar', Jar) {
-    dependsOn tasks.jar
-    from sourceSets.main.output
-    into("optimized")
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    doLast {
-        println "Optimized JAR created at: ${archiveFile.get().asFile}"
     }
 }
