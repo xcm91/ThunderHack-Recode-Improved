@@ -12,7 +12,7 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04  # Explicitly use Ubuntu 22.04 to avoid migration notice
     permissions:
       contents: read
       packages: write
@@ -58,3 +58,4 @@ jobs:
           path: |
             ./build/libs/*.jar
           retention-days: 30
+
