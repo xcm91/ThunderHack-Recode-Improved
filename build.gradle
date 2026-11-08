@@ -35,7 +35,7 @@ dependencies {
     implementation "org.jetbrains:annotations:24.0.1"
 
     // Meteor Orbit
-    implementation "meteordevelopment:orbit:5.0.1"
+    implementation "meteordevelopment:orbit:0.2.4"
 }
 
 processResources {
