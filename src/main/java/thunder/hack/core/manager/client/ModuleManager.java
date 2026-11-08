@@ -30,7 +30,6 @@ public class ModuleManager implements IManager {
     public List<Module> sortedModules = new ArrayList<>();
     public List<Integer> activeMouseKeys = new ArrayList<>();
 
-    public static PenisESP penisESP = new PenisESP();
     public static AntiPacketException antiPacketException = new AntiPacketException();
     public static LevitationControl levitationControl = new LevitationControl();
     public static InventoryCleaner inventoryCleaner = new InventoryCleaner();
@@ -263,6 +262,7 @@ public class ModuleManager implements IManager {
     public static PastedPaperDupe paperdupe = new PastedPaperDupe();
     public static Religion religion = new Religion();
     public static Freeze freeze = new Freeze();
+    public static TPAura tpAura = new TPAura();
 
     public ModuleManager() {
         for (Field field : getClass().getDeclaredFields()) {
