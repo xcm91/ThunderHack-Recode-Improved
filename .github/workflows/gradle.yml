@@ -40,7 +40,7 @@ jobs:
       - name: Grant Gradlew Permissions
         run: chmod +x gradlew
 
-      - name: Build with Gradle (with debug)
+      - name: Build with Gradle
         run: ./gradlew build --stacktrace --info
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
