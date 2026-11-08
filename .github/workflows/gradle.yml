@@ -16,7 +16,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-      checks: write
 
     steps:
       - name: Checkout Repository
@@ -25,15 +24,14 @@ jobs:
           fetch-depth: 0
 
       - name: Set up JDK 21
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           java-version: '21'
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-package: 'jdk'
-          cache: 'gradle'
 
       - name: Cache Gradle Dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v3
         with:
           path: |
             ~/.gradle/caches
@@ -50,10 +48,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Tests (Optional)
-        run: ./gradlew test
-        if: success()
-
       - name: Remove Sources JAR
         run: rm -f ./build/libs/*-sources.jar || true
 
@@ -63,16 +57,4 @@ jobs:
           name: ThunderHack-Recode-${{ github.sha }}
           path: |
             ./build/libs/*.jar
-            ./build/libs/*.jar.md5
-            ./build/libs/*.jar.sha1
           retention-days: 30
-          compression-level: 9
-
-      - name: Create Release (On Tag)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: ./build/libs/*.jar
-          generate_release_notes: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
